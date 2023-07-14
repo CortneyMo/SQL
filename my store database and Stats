@@ -1,0 +1,28 @@
+--Create a grocery store database 
+
+CREATE TABLE mystore (id INTEGER PRIMARY KEY, items TEXT, quantity INTEGER, price NUMERIC);
+
+
+INSERT INTO mystore VALUES(1,"chips", 10, 2.00);
+INSERT INTO mystore VALUES(2,"candy", 20, .50);
+INSERT INTO mystore VALUES(3,"milk", 5, 2.75);
+INSERT INTO mystore VALUES(4,"apples", 15, 2.09);
+INSERT INTO mystore VALUES(5,"bananas", 16, 2.19);
+INSERT INTO mystore VALUES(6,"oranges", 12, 5.00);
+INSERT INTO mystore VALUES(7,"airheads", 70, 7.00);
+INSERT INTO mystore VALUES(8,"pickles", 45,6.25);
+INSERT INTO mystore VALUES(9,"lettuce", 30, 2.11);
+INSERT INTO mystore VALUES(10,"grapes", 15, 3.50);
+INSERT INTO mystore VALUES(11,"soda", 19, 12.20);
+INSERT INTO mystore VALUES(12,"nachos", 2, 9.65);
+INSERT INTO mystore VALUES(13,"potatoes", 15, 4.10);
+INSERT INTO mystore VALUES(14,"water", 100, 15.00);
+
+--display the database
+SELECT * FROM mystore
+
+--What are the top 5 most expensive items?
+Select * FROM mystore WHERE price > 5 ORDER BY Price Desc;
+
+--What 5 items will bring in the most total revenue?
+SELECT items, ROUND(quantity*price, 2) AS sales FROM mystore Order BY sales DESC LIMIT 5;
