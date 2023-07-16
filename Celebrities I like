@@ -1,0 +1,124 @@
+/* Create table about the people and what they do here */
+
+/* Creating celebrity table*/
+
+CREATE TABLE Stars(id INTEGER PRIMARY KEY,name TEXT, gender TEXT, country TEXT, birthday TEXT, age INTEGER, relationships TEXT);
+
+INSERT INTO Stars VALUES(1,"Lee Jong Suk","M","South Korea","Sept. 14", 33, "dating");
+INSERT INTO Stars VALUES(2,"Park Seo Joon","M","South Korea","Dec. 16", 34, " ");
+INSERT INTO Stars VALUES(3,"Park Bo-gum","M","South Korea","June 16", 30, " ");
+INSERT INTO Stars VALUES(4,"Rain","M","South Korea","June 16", 41, "married");
+INSERT INTO Stars VALUES(5,"IU","F","South Korea","May 16", 30, "dating");
+INSERT INTO Stars VALUES(6,"Miley Cyrus","F","USA","Nov. 23", 30, "divorced");
+INSERT INTO Stars VALUES(7,"Selena Gomez","F","USA","July 22", 30, "single");
+INSERT INTO Stars VALUES(8,"Raven Symone","F","USA","Dec. 10", 37, "married");
+INSERT INTO Stars VALUES(9,"Hilary Duff","F","USA","Sept. 28", 35, "married");
+INSERT INTO Stars VALUES(10,"Mila Kunis","F","USA","Aug. 14", 39, "married");
+INSERT INTO Stars VALUES(11,"Justin Timberlake","M","USA","Jan. 31", 42, "married");
+INSERT INTO Stars VALUES(12,"Channing Tatum","M","USA","April 26", 43, "divorced");
+INSERT INTO Stars VALUES(13,"Tom Holland","M","UK","June 1", 27, "dating");
+INSERT INTO Stars VALUES(14,"Zendaya Coleman","F","USA","Sept. 1", 26, "dating");
+INSERT INTO Stars VALUES(15,"Keke Palmer","F","USA","Aug. 26", 29, "married");
+
+
+
+/*Creating a singers' song list table*/
+
+CREATE TABLE Singers(song_id INTEGER PRIMARY KEY,name TEXT, song_title TEXT, year Integer);
+
+INSERT INTO Singers VALUES(1,"BTS", "Danger","2014");
+INSERT INTO Singers VALUES(2,"BTS", "NO", "2013");
+INSERT INTO Singers VALUES(3,"Miley Cyrus", "FLowers", "2023");
+INSERT INTO Singers VALUES(4,"Miley Cyrus", "The Climb", "2009");
+INSERT INTO Singers VALUES(5,"Miley Cyrus", "When I look at you", "2010");
+INSERT INTO Singers VALUES(6,"Selena Gomez", "Calm down", "2022");
+INSERT INTO Singers VALUES(7,"Selena Gomez", "Who Says", "2011");
+INSERT INTO Singers VALUES(8,"Selena Gomez", "Ice cream", "2020");
+INSERT INTO Singers VALUES(9,"IU", "Lilac", "2021");
+INSERT INTO Singers VALUES(10,"IU", "Palette", "2017");
+INSERT INTO Singers VALUES(11,"IU", "Bbibbi", "2018");
+INSERT INTO Singers VALUES(12,"IU", "Blueming", "2021");
+INSERT INTO Singers VALUES(13,"IU", "Eight ft. BTS suga", "2020");
+INSERT INTO Singers VALUES(14,"Raven Symone", "backflip", "2004");
+INSERT INTO Singers VALUES(15,"Raven Symone", "Some Call it Magic", "2006");
+INSERT INTO Singers VALUES(16,"Big Bang", "Fantastic Baby", "2012");
+INSERT INTO Singers VALUES(17,"Big Bang", "Bad boy", "2008");
+INSERT INTO Singers VALUES(18,"Big Bang", "FXXT IT", "2016");
+INSERT INTO Singers VALUES(19,"Big Bang", "HARU HARU", "2008");
+INSERT INTO Singers VALUES(20,"Big Bang", "Still Life", "2022");
+
+
+/*Creating a movies table*/
+
+CREATE TABLE Movies(actor_id INTEGER PRIMARY KEY, movie1 TEXT, year1 INTEGER, movie2 TEXT, year2 INTEGER); 
+
+INSERT INTO Movies VALUES(1,"Decibel", 2022, "The Witch 2",2022);
+INSERT INTO Movies VALUES(2,"Parasite", 2019, "The Marvels",2023);
+INSERT INTO Movies VALUES(6,"The Last Song", 2010, "Hannah Montana: The Movie",2009);
+INSERT INTO Movies VALUES(7,"Monte Carlo", 2011, "Another Cinderella Movie",2008);
+INSERT INTO Movies VALUES(5,"Dream", 2023, "Broker",2022);
+INSERT INTO Movies VALUES(3,"Seo Bok", 2021, "Blind",2011);
+INSERT INTO Movies VALUES(4,"Ninja assasin", 2009, "Race to Freedom",2019);
+INSERT INTO Movies VALUES(9,"The Lizzie McGuire Movie", 2003, "A Cinderella Story",2004);
+INSERT INTO Movies VALUES(11,"Friends With Benefits", 2011, "Palmer",2021);
+INSERT INTO Movies VALUES(10,"Bad Moms", 2016, "Friends with Benefits",2011);
+INSERT INTO Movies VALUES(12,"Magic Mike", 2012, "Lost City",2022);
+INSERT INTO Movies VALUES(15,"NOPE", 2022, "JUMP IN",2007);
+INSERT INTO Movies VALUES(14,"The Greatest Showman", 2017, "Spider-Man: No Way Home",2021);
+INSERT INTO Movies VALUES(13,"Uncharted", 2022, "Spiderman: Homecoming",2017);
+
+
+
+/* Creating TV show table*/
+
+CREATE TABLE TV_shows(actor_id INTEGER, title TEXT, release_year INTEGER); 
+
+INSERT INTO TV_shows VALUES(1,"W", 2016);
+INSERT INTO TV_shows VALUES(1,"Pinocchio", 2014);
+INSERT INTO TV_shows VALUES(2,"Itawon class", 2022);
+INSERT INTO TV_shows VALUES(2,"Fight for my way", 2017);
+INSERT INTO TV_shows VALUES(6,"Hannah Montana", 2066);
+INSERT INTO TV_shows VALUES(7,"Wizard of Waverly Place", 2007);
+INSERT INTO TV_shows VALUES(7,"Only murderers in the building", 2021);
+INSERT INTO TV_shows VALUES(5,"Hotel de Luna", 2019);
+INSERT INTO TV_shows VALUES(5,"Moon lover", 2016);
+INSERT INTO TV_shows VALUES(3,"Love in Moonlight", 2016);
+INSERT INTO TV_shows VALUES(3,"Replay 1988", 2015);
+INSERT INTO TV_shows VALUES(3,"Record of Youth", 2020);
+INSERT INTO TV_shows VALUES(4,"Full House", 2016);
+INSERT INTO TV_shows VALUES(4,"Ghost Doctor", 2022);
+INSERT INTO TV_shows VALUES(8,"That's so Raven", 2003);
+INSERT INTO TV_shows VALUES(8,"Raven's Home", 2017);
+
+
+/* Now using joins to answer some questions*/
+
+--Name the actors their shows release between 2010 and 2020
+
+SELECT name, title, release_year FROM TV_shows AS t
+INNER JOIN Stars as s
+ON s.id = t.actor_id
+WHERE release_year BETWEEN 2012 AND 2020
+ORDER BY release_year DESC;
+
+
+--Use Left join find singers age, country and their relationship status
+
+Select s.name AS singer, age,country, relationships FROM Singers As s
+LEFT JOin stars ON stars.name = s.name
+-- Removing NULL Values
+WHERE age IS NOT NULL
+GROUP BY s.name 
+ORDER BY  age DESC;
+
+
+--Use a Left JOIN to find movie actors who don't have any songs
+
+SELECT stars.name, movie1, year1, movie2, year2 
+FROM Movies AS m
+--Finding movie actors names
+INNER JOIN Stars ON Stars.id = m.actor_id
+--Fiding actors who are NOT singers
+LEFT JOIN Singers AS s ON  s.name= stars.name
+WHERE s.name IS NULL AND year1 >= 2019
+ORDER BY year2;
