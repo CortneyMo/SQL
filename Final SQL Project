@@ -1,0 +1,157 @@
+# Here are a mixer of questions predetermined and self created
+#Answers were found using SQLlite to present as my final SQL project for Break Into Tech's SQL curriculumn portion.
+
+## 1. What customers are not from the USA?
+SELECT COUNT(country) FROM chinook.customers
+WHERE Country <> 'USA';
+
+## 2. What customers are in Brazil?
+SELECT * FROM chinook.customers
+WHERE Country = 'Brazil';
+
+## 3. Find the invoices of customers who are from Brazil.
+
+SELECT FirstName, LastName, InvoiceId, InvoiceDate, BillingCountry FROM chinook.customers AS c
+LEFT JOIN chinook.invoices AS i
+ON c.CustomerId = i.CustomerId
+WHERE Country = 'Brazil';
+
+## 4. What employees are sales agents?
+
+SELECT Title, FirstName, LastName FROM chinook.employees
+WHERE Title = 'Sales Support Agent';
+
+## 5. Find the unique/distinct list of billing countries from the invoice table.
+
+SELECT DISTINCT BillingCountry FROM chinook.invoices;
+
+
+## 6. Provide a query that shows the invoices associated with each sales agent. Include full name.
+
+SELECT emp.FirstName || ' '|| emp.LastName AS 'Employee', i.InvoiceId FROM chinook.employees AS emp
+JOIN chinook.customers AS c ON emp.EmployeeID = c.CustomerId
+JOIN chinook.invoices AS i ON c.CustomerId = i.CustomerId;
+
+#Up to this point I used the tables long name when I still had all the databases Connected.
+# After disconnecting my other databases I used the tables short names
+
+## 7. Show Invoice Totals, Customer name, Country, and Sales agent name.
+
+SELECT SUM(i.Total) AS invoice_Totals, c.FirstName customerFirstName, 
+        c.LastName CustomerLastName, c.Country, 
+        emp.FirstName EmployeeFirstName, emp.LastName employeeLastName
+FROM employees AS emp
+JOIN customers AS c 
+    ON emp.EmployeeID = c.CustomerId
+JOIN invoices AS i 
+    ON c.CustomerId = i.CustomerId
+GROUP BY i.CustomerId;
+
+## 8. How many invoice were there in 2009?
+
+SELECT COUNT(*) From invoices
+WHERE InvoiceDate Like '%2009%';
+
+## 9. What are the total sales in 2009?
+
+SELECT "$ " || ROUND(SUM(Total), 2) AS '2009 Totals' 
+From invoices
+WHERE InvoiceDate Like '%2009%';
+
+## 10 Present the puchased track name with each invoice line ID.
+
+SELECT t.Name, InvoiceLineID  FROM invoice_items AS i
+JOIN tracks AS t ON t.TrackID = i.TrackID;
+
+## 11 Present the purchased track name and artist name with each invoice line ID
+
+SELECT t.Name Track, artists.Name AS Artist, InvoiceLineID  FROM invoice_items AS i
+JOIN tracks AS t ON t.TrackID = i.TrackID
+JOIN albums ON t.Albumid = albums.Albumid
+JOIN artists ON albums.Artistid = artists.ArtistId;
+
+## 12 Show all tracks with album name, Media type, and genre.
+
+SELECT 
+        tracks.name AS track, 
+        albums.Title AS album, 
+        media.Name AS media,
+        genres.Name AS genre FROM tracks
+    JOIN albums ON albums.AlbumId = tracks.AlbumId
+    JOIN media_types AS media ON media.MediaTypeId = tracks.MediaTypeId
+    JOIN genres ON genres.GenreId = tracks.GenreId;
+
+## 13 Show the Sales agents' total sales.
+SELECT DISTINCT emp.FirstName || " " || emp.LastName AS 'Sales Agent',
+        '$ ' || ROUND(SUM(invoices.Total),2) AS 'Total Sales'
+FROM employees AS emp
+JOIN customers AS c ON c.SupportRepId = emp.EmployeeId
+JOIN invoices ON invoices.CustomerId = c.CustomerId
+GROUP BY EmployeeId;
+
+
+## 14 Which Agent made the most dollars in Sales in 2009?
+
+SELECT DISTINCT emp.FirstName || " " || emp.LastName AS 'Sales Agent',
+        '$ ' || ROUND(SUM(invoices.Total),2) AS 'Total Sales'
+FROM employees AS emp
+JOIN customers AS c ON c.SupportRepId = emp.EmployeeId
+JOIN invoices ON invoices.CustomerId = c.CustomerId
+GROUP BY EmployeeId
+HAVING InvoiceDate LIKE '%2009%';
+
+
+## 15. Show the genre total sales in desc order.
+
+SELECT genres.Name AS genres, ROUND(SUM(invoices.Total),2) AS Total_Sales FROM genres
+JOIN tracks ON tracks.GenreId = genres.GenreId
+JOIN invoice_items ON invoice_items.TrackId = tracks.TrackId
+JOIN invoices ON invoices.InvoiceId = invoice_items.InvoiceId
+GROUP BY genres.GenreId
+ORDER BY Total_Sales DESC;
+
+## 16. What three tracks from the best selling genre brought in the most sales?
+
+SELECT t.name, ROUND(SUM(Total),2) AS Sales FROM tracks AS t
+JOIN genres AS g ON g.GenreId = t.GenreId
+JOIN invoice_items ON invoice_items.TrackId = t.TrackId
+JOIN invoices ON Invoices.InvoiceId = invoice_items.InvoiceId
+GROUP BY t.Name
+HAVING g.Name = 'Rock'
+ORDER BY Sales DESC
+LIMIT 3;
+
+## 17. How many genres are in each playlist?
+
+SELECT DISTINCT p.Name AS playlist, COUNT(g.Name) AS genre FROM playlists AS p
+JOIN playlist_track AS ptrack ON ptrack.PlaylistId = p.PlaylistId
+JOIN tracks ON tracks.TrackId = ptrack.TrackId
+JOIN genres AS g ON g.GenreId = tracks.GenreId
+Group BY playlist;
+
+
+## 18. How Long is each plalist?
+
+SELECT DISTINCT p.Name AS playlist, SUM(t.Milliseconds)/60000 AS minutes
+FROM playlists AS p
+JOIN playlist_track AS ptrack ON ptrack.PlaylistId = p.PlaylistId
+JOIN tracks AS t ON t.TrackId = ptrack.TrackId
+GROUP BY playlist
+ORDER BY minutes;
+
+## 19. Show the each tracks average unit price.
+
+SELECT '$ ' || ROUND(AVG(UnitPrice),2) AS avg_Price FROM tracks;
+
+
+## 20. Show the Name and price of tracks that are above the average price.
+
+SELECT Name, UnitPrice AS Price FROM tracks
+WHERE UnitPrice > (SELECT ROUND(AVG(UnitPrice),2) AS avg_Price FROM tracks);
+
+## 21. Find how many tracks are below the average price
+
+SELECT COUNT(Name) AS 'Cheaper Tracks' FROM tracks
+WHERE UnitPrice < (SELECT ROUND(AVG(UnitPrice),2) AS avg_Price FROM tracks);
+
+
