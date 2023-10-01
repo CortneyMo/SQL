@@ -1,7 +1,7 @@
 SELECT * FROM ign LIMIT 5;
 
 --Finding the top ranked games 10 years ago (2013)--
-SELECT *
+SELECT title, platform, score, release_year
 FROM ign
 WHERE release_year = 2013
 order By score DESC;
