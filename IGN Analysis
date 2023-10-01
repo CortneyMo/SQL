@@ -1,0 +1,37 @@
+SELECT * FROM ign LIMIT 5;
+
+--Finding the top ranked games 10 years ago (2013)--
+SELECT *
+FROM ign
+WHERE release_year = 2013
+order By score DESC;
+
+--Top Average score of platforms
+SELECT platform, ROUND(AVG(score),2) AS average_score
+FROM ign
+GROUP BY platform
+ORDER BY average_score DESC;
+
+--Game Genre analysis: most popular genre and their average score
+SELECT genre,COUNT(genre) As genre_count, ROUND(AVG(score),2) AS average_score
+FROM ign
+GROUP BY genre
+ORDER BY genre_count DESC, average_score DESC;
+
+--Game Genre analysis: Genre popularity over time--
+SELECT release_year, genre,COUNT(genre) As genre_count, ROUND(AVG(score),2) AS average_score
+FROM ign
+GROUP BY genre
+ORDER BY genre_count DESC, average_score DESC;
+
+--Yearly trends: average game rating over the years--demo
+SELECT release_year, COUNT(release_year) AS game_count, ROUND(AVG(score),2) AS average_score
+FROM ign
+GROUP BY release_year
+ORDER BY  average_score DESC;
+
+--Game release frequency: average game rating over the years--demo
+SELECT release_year, release_month_name, COUNT(release_year) AS game_count
+FROM ign
+GROUP BY release_year, release_month_name
+ORDER BY  release_year DESC, game_count DESC;
